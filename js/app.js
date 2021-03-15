@@ -1,4 +1,5 @@
 'use strict';
+let btn = document.getElementById('result_btn');
 
 const img_names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast',
     'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen',
@@ -18,7 +19,7 @@ const rightImage = document.getElementById('rightImage');
 const extension = ['jpg', 'png', 'gif'];
 function Data(name, extension) {
     this.name = name;
-    this.view = 0;
+    this.views = 0;
     this.extension = extension;
     this.path = `./img/${name}.${extension}`;
     this.votes = 0;
@@ -39,31 +40,34 @@ for (let z = 0; z < img_names.length; z++) {
 
 function render() {
     const leftIndex = randomNumber(0, Data.holder.length - 1);
-    const centerIndex = randomNumber(0, Data.holder.length - 1);
-    const rightIndex = randomNumber(0, Data.holder.length - 1);
-
     const leftRandomData = Data.holder[leftIndex];
     leftImage.src = leftRandomData.path;
     leftImage.title = leftRandomData.name;
     leftImage.alt = leftRandomData.name;
 
+    const centerIndex = randomNumber(0, Data.holder.length - 1);
     const centerRandomData = Data.holder[centerIndex];
     centerImage.src = centerRandomData.path;
     centerImage.title = centerRandomData.name;
     centerImage.alt = centerRandomData.name;
 
+    const rightIndex = randomNumber(0, Data.holder.length - 1);
     const rightRandomData = Data.holder[rightIndex];
     rightImage.src = rightRandomData.path;
     rightImage.title = rightRandomData.name;
     rightImage.alt = rightRandomData.name;
 }
 
+render();
+
+section.addEventListener('click', progress);
+
 let x = 0;
 let ul = document.createElement('ul');
 let main = document.getElementById('main');
 let totalVotes;
-section.addEventListener('click', function (event) {
-    event.preventDefault();
+
+function progress(event) {
     totalVotes = [];
     if (event.target.id === 'leftImage' || event.target.id === 'centerImage' || event.target.id === 'rightImage') {
         for (let i = 0; i < Data.holder.length; i++) {
@@ -71,25 +75,32 @@ section.addEventListener('click', function (event) {
                 Data.holder[i].votes++;
             }
             if (Data.holder[i].path === event.target.src || Data.holder[i].name === event.target.title) {
-                Data.holder[i].view++;
+                Data.holder[i].views++;
             }
-            totalVotes.push(Data.holder[i].name + ' has ' + Data.holder[i].votes);
             render();
         }
         x++;
+
     } else {
         alert('clicked in image please!');
     }
 
     if (x > 24) {
-        for (let i = 0; i < totalVotes.length; i++) {
-            let li = document.createElement('li');
-            li.innerText = totalVotes[i];
-            ul.appendChild(li);
-            main.appendChild(ul);
+        btn.style.visibility = 'visible';
+
+        for (let i = 0; i < Data.holder.length; i++) {
+            section.removeEventListener('click', progress);
+            btn.addEventListener('click', function () {
+                btn.innerHTML = 'Hide Result';
+                let li = document.createElement('li');
+                li.innerHTML = (Data.holder[i].name + ' had ' + Data.holder[i].votes + ' votes, and was seen  ' + Data.holder[i].views + ' times.');
+                ul.appendChild(li);
+                main.appendChild(ul);
+            })
         }
         x = 0;
     }
-})
+}
 
-console.log(Data.holder);
+
+// console.log(totalVotes);
