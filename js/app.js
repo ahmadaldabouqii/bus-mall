@@ -68,12 +68,13 @@ section.addEventListener('click', function (event) {
     if (event.target.id === 'leftImage' || event.target.id === 'centerImage' || event.target.id === 'rightImage') {
         for (let i = 0; i < Data.holder.length; i++) {
             if (event.target.name[i] === event.target.title[i]) {
-                Data.holder[i].view++;
                 Data.holder[i].votes++;
+            }
+            if (Data.holder[i].path === event.target.src || Data.holder[i].name === event.target.title) {
+                Data.holder[i].view++;
             }
             totalVotes.push(Data.holder[i].name + ' has ' + Data.holder[i].votes);
             render();
-            console.log(totalVotes);
         }
         x++;
     } else {
