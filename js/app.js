@@ -1,5 +1,4 @@
 'use strict';
-let btn = document.getElementById('result_btn');
 
 const img_names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast',
     'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen',
@@ -41,23 +40,32 @@ for (let z = 0; z < img_names.length; z++) {
 function render() {
     const leftIndex = randomNumber(0, Data.holder.length - 1);
     const leftRandomData = Data.holder[leftIndex];
-    leftImage.src = leftRandomData.path;
-    leftImage.title = leftRandomData.name;
-    leftImage.alt = leftRandomData.name;
-
     const centerIndex = randomNumber(0, Data.holder.length - 1);
     const centerRandomData = Data.holder[centerIndex];
-    centerImage.src = centerRandomData.path;
-    centerImage.title = centerRandomData.name;
-    centerImage.alt = centerRandomData.name;
-
     const rightIndex = randomNumber(0, Data.holder.length - 1);
     const rightRandomData = Data.holder[rightIndex];
-    rightImage.src = rightRandomData.path;
-    rightImage.title = rightRandomData.name;
-    rightImage.alt = rightRandomData.name;
-}
 
+    if (leftRandomData != centerRandomData && leftRandomData != rightRandomData) {
+        leftImage.src = leftRandomData.path;
+        leftImage.title = leftRandomData.name;
+        leftImage.alt = leftRandomData.name;
+        Data.holder[leftIndex].views++;
+    }
+
+    if (leftRandomData != centerRandomData && centerRandomData != rightRandomData) {
+        centerImage.src = centerRandomData.path;
+        centerImage.title = centerRandomData.name;
+        centerImage.alt = centerRandomData.name;
+        Data.holder[centerIndex].views++;
+    }
+
+    if (rightRandomData != centerRandomData && leftRandomData != rightRandomData) {
+        rightImage.src = rightRandomData.path;
+        rightImage.title = rightRandomData.name;
+        rightImage.alt = rightRandomData.name;
+        Data.holder[rightIndex].views++;
+    }
+}
 render();
 
 section.addEventListener('click', progress);
@@ -74,9 +82,6 @@ function progress(event) {
             if (event.target.name[i] === event.target.title[i]) {
                 Data.holder[i].votes++;
             }
-            if (Data.holder[i].path === event.target.src || Data.holder[i].name === event.target.title) {
-                Data.holder[i].views++;
-            }
             render();
         }
         x++;
@@ -86,21 +91,70 @@ function progress(event) {
     }
 
     if (x > 24) {
-        btn.style.visibility = 'visible';
-
-        for (let i = 0; i < Data.holder.length; i++) {
-            section.removeEventListener('click', progress);
-            btn.addEventListener('click', function () {
-                btn.innerHTML = 'Hide Result';
-                let li = document.createElement('li');
-                li.innerHTML = (Data.holder[i].name + ' had ' + Data.holder[i].votes + ' votes, and was seen  ' + Data.holder[i].views + ' times.');
-                ul.appendChild(li);
-                main.appendChild(ul);
-            })
-        }
+        section.removeEventListener('click', progress);
+        createChart();
         x = 0;
     }
 }
 
+function createChart() {
+    let context = document.getElementById('myChart').getContext('2d');
+    let getimgNames = [];
+    let getimgVotes = [];
+    let getimgViews = [];
 
-// console.log(totalVotes);
+    for (let i = 0; i < Data.holder.length; i++) {
+        getimgNames.push(Data.holder[i].name);
+    }
+    for (let i = 0; i < Data.holder.length; i++) {
+        getimgVotes.push(Data.holder[i].votes);
+    }
+    for (let i = 0; i < Data.holder.length; i++) {
+        getimgViews.push(Data.holder[i].views);
+    }
+
+    let chartObject = {
+        type: 'horizontalBar',
+        data: {
+            labels: getimgNames,
+            datasets: [{
+                label: 'voting results',
+                backgroundColor: ['rgb(255, 478, 132)', 'rgb(0, 876, 0)', 'rgb(897, 235, 132)', 'rgb(128, 678, 0)', 'rgb(0, 255, 255)', 'rgb(089, 275, 56)', 'rgb(434, 255, 137)', 'rgb(236, 89, 132)', 'rgb(0, 355, 0)', 'rgb(255, 99, 162)', 'rgb(128, 255, 0)', 'rgb(0, 265, 255)', 'rgb(255, 255, 0)', 'rgb(295, 255, 128)', 'rgb(255, 99, 132)', 'rgb(0, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)',],
+                borderColor: 'rgb(155, 200, 132)',
+                data: getimgVotes,
+            },
+            {
+                label: 'views results',
+                backgroundColor: ['rgb(255, 99, 132)', 'rgb(357, 255, 0)', 'rgb(255, 57, 132)', 'rgb(128, 587, 0)', 'rgb(0, 670, 255)', 'rgb(255, 255, 0)', 'rgb(897, 255, 128)', 'rgb(255, 99, 457)', 'rgb(455, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)', 'rgb(255, 99, 132)', 'rgb(0, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)'],
+                borderColor: 'rgb(200, 99, 562)',
+                data: getimgViews,
+            }
+            ]
+        },
+
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        fontSize: 15,
+                        fontColor: 'black',
+                        fontFamily: 'cursive'
+                    }
+                }],
+                xAxes: [{
+                    barPercentage: 0.1,
+                }]
+            },
+            legend: {
+                labels: {
+                    fontColor: 'black',
+                    fontFamily: 'cursive',
+                    fontSize: 20
+                }
+            }
+        }
+    }
+
+    let chart = new Chart(context, chartObject);
+}
+render();
