@@ -1,4 +1,5 @@
 'use strict';
+const orders = document.getElementById('orders');
 
 const img_names = ['bag', 'banana', 'bathroom', 'boots', 'breakfast',
     'bubblegum', 'chair', 'cthulhu', 'dog-duck', 'dragon', 'pen',
@@ -22,6 +23,7 @@ function Data(name, extension) {
     this.extension = extension;
     this.path = `./img/${name}.${extension}`;
     this.votes = 0;
+
     Data.holder.push(this);
 }
 
@@ -35,6 +37,13 @@ for (let z = 0; z < img_names.length; z++) {
     } else {
         new Data(img_names[z], extension[0]);
     }
+}
+
+function retrieveData() {
+    let data = localStorage.getItem('order');
+    data = JSON.parse(data);
+    return data;
+    // console.log(data);
 }
 
 function render() {
@@ -65,13 +74,13 @@ function render() {
         rightImage.alt = rightRandomData.name;
         Data.holder[rightIndex].views++;
     }
+
 }
 render();
 
 section.addEventListener('click', progress);
 
 let x = 0;
-let ul = document.createElement('ul');
 let main = document.getElementById('main');
 let totalVotes;
 
@@ -92,13 +101,12 @@ function progress(event) {
 
     if (x > 24) {
         section.removeEventListener('click', progress);
-        createChart();
+        DB();
         x = 0;
     }
 }
 
-function createChart() {
-    let context = document.getElementById('myChart').getContext('2d');
+function DB() {
     let getimgNames = [];
     let getimgVotes = [];
     let getimgViews = [];
@@ -113,48 +121,19 @@ function createChart() {
         getimgViews.push(Data.holder[i].views);
     }
 
-    let chartObject = {
-        type: 'horizontalBar',
-        data: {
-            labels: getimgNames,
-            datasets: [{
-                label: 'voting results',
-                backgroundColor: ['rgb(255, 478, 132)', 'rgb(0, 876, 0)', 'rgb(897, 235, 132)', 'rgb(128, 678, 0)', 'rgb(0, 255, 255)', 'rgb(089, 275, 56)', 'rgb(434, 255, 137)', 'rgb(236, 89, 132)', 'rgb(0, 355, 0)', 'rgb(255, 99, 162)', 'rgb(128, 255, 0)', 'rgb(0, 265, 255)', 'rgb(255, 255, 0)', 'rgb(295, 255, 128)', 'rgb(255, 99, 132)', 'rgb(0, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)',],
-                borderColor: 'rgb(155, 200, 132)',
-                data: getimgVotes,
-            },
-            {
-                label: 'views results',
-                backgroundColor: ['rgb(255, 99, 132)', 'rgb(357, 255, 0)', 'rgb(255, 57, 132)', 'rgb(128, 587, 0)', 'rgb(0, 670, 255)', 'rgb(255, 255, 0)', 'rgb(897, 255, 128)', 'rgb(255, 99, 457)', 'rgb(455, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)', 'rgb(255, 99, 132)', 'rgb(0, 255, 0)', 'rgb(255, 99, 132)', 'rgb(128, 255, 0)', 'rgb(0, 255, 255)', 'rgb(255, 255, 0)', 'rgb(255, 255, 128)'],
-                borderColor: 'rgb(200, 99, 562)',
-                data: getimgViews,
-            }
-            ]
-        },
+    localStorage.setItem('order', JSON.stringify(Data.holder));
 
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        fontSize: 15,
-                        fontColor: 'black',
-                        fontFamily: 'cursive'
-                    }
-                }],
-                xAxes: [{
-                    barPercentage: 0.1,
-                }]
-            },
-            legend: {
-                labels: {
-                    fontColor: 'black',
-                    fontFamily: 'cursive',
-                    fontSize: 20
-                }
-            }
-        }
+    orders.textContent = '';
+    let ordersList = retrieveData();
+
+    if (ordersList === null) {
+        ordersList = Data.holder;
     }
 
-    let chart = new Chart(context, chartObject);
+    for (let i = 0; i < ordersList.length; i++) {
+        const li = document.createElement('li');
+        li.textContent = `the votes is ${ordersList[i].votes}`;
+        orders.appendChild(li);
+    }
 }
 render();
