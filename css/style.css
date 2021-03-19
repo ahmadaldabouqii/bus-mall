@@ -3,21 +3,39 @@
     margin: 0 auto;
     margin-top: 30px;
     text-align: center;
-    
+    margin-top: 10%;
 }
 
 body {
     background: #3768C8;
+    background-image: url(/img/backgroung-image.jpg);
 }
 
-header {
-    text-align: center;
-    border: 5px solid #C89737;
-    margin-bottom: 40px;
-    border-radius: 10px;
-    margin-left: 10%;
-    margin-right: 10%;
-    background-color: coral;
+header::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    height: 25%;
+    width:100%;
+    transform: skewY(-4deg);
+    background: red;
+    transform-origin: bottom left;
+    z-index: -1;
+}
+  
+  header::before{
+    content:"";
+    position:absolute;
+    top:0;
+    left:0;
+    height: 25%;
+    width:100%;
+    transform: skewY(8deg);
+    background: red;
+    transform-origin: bottom right;
+    z-index: -1;
+    
 }
 
 li {
@@ -39,6 +57,8 @@ img {
 h2{
     font-family: cursive;
     color: black;
+    padding-top: 2%;
+    font-size: xx-large;
 }
 
 button{
@@ -69,4 +89,9 @@ ul{
     width: 120vh;
     top:15%;
     margin:auto;
+}
+
+nav{
+    text-align: center;
+    
 }
