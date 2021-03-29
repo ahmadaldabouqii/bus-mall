@@ -71,6 +71,7 @@ function randomImage() {
   }
 }
 randomImage();
+randomImage();
 
 let main = document.getElementById('main');
 section.addEventListener('click', progress);
