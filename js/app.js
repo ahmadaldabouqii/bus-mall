@@ -99,7 +99,6 @@ function progress(event) {
   if(counter === attempts) {
     section.removeEventListener('click', progress);
     let button = document.createElement('button');
-    button.style.visibility = 'visible';
     main.appendChild(button);
     button.textContent = 'Results';
     button.addEventListener('click',resultDisplay);
