@@ -3,11 +3,31 @@
     margin: 0 auto;
     margin-top: 30px;
     text-align: center;
-    
 }
 
-body {
-    background: #3768C8;
+body{
+    animation: pulse 5s infinite;
+}
+  
+@keyframes pulse {
+    0% {
+        background-color: #aa8096;
+    }
+    100% {
+        background: #3768C8;
+    }
+}
+  
+@keyframes slidein {
+    from {
+      margin-left: 100%;
+      width: 500%;
+    }
+
+    to {
+      margin-left: 0%;
+      width: 100%;
+    }
 }
 
 header {
@@ -37,8 +57,15 @@ img {
 }
 
 h2{
-    font-family: cursive;
-    color: black;
+  animation-duration: 3s;
+  animation-name: slidein;
+  text-align: center;
+  font-size: 45px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  font-family: 'Bevan', cursive;
+  text-transform: uppercase;
+  word-spacing: 10px;
 }
 
 button{
