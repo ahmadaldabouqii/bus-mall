@@ -83,8 +83,14 @@ function progress(event) {
       if (Prodcts.holder[i].name === event.target.title) {
         Prodcts.holder[i].votes++;
         counter++;
+        console.log('votes inside if: ' + Prodcts.holder[i].votes);
+        console.log('counter inside if: ' + counter);
+        console.log(Prodcts.holder[i].name);
+        console.log(event.target.title);
       }
+      console.log('im inside for');
     }
+    console.log(' ');
     randomImage();
   } else {
     alert('clicked in image please!');
